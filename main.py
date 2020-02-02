@@ -3,8 +3,6 @@ import instagram
 
 app = Flask(__name__)
 
-
-
 ####################### WATER ###############################
 WaterPlants = False
 def startWatering():
@@ -32,7 +30,7 @@ user = admin
 @app.route("/")
 def home():
     global user
-    return render_template("home.html", Login = LoggedOn, user =user)
+    return render_template("home.html", Login = LoggedOn, user = user)
 
 @app.route("/about")
 def about():
@@ -76,5 +74,6 @@ def cathrine():
 
 ############################# MAIN ############################
 if __name__ == "__main__":
-    waterPlants()
+    #Thread the program so that app is handle by one thread and watering handled by another.
     app.run(debug=True)
+    waterPlants()
