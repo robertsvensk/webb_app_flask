@@ -2,12 +2,35 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title> Plats</title>
+        <title> Plants</title>
+        <style> 
+            .logo{
+                background-color: blue;
+                color: white;
+            }
+            body {
+            }
+
+            .watering{
+            }
+                 
+            input{
+             background-color: lightgreen;
+            }
+        </style>
     </head>
     <body>
         {% extends "template.html" %}
         {% block content %}
-        <button type="button">Click Me!</button>
+        <div class="watering">
+            <h2>Plant system</h2>
+            <form method="post">
+                <input type="submit" value="Water the Plants">
+                <p> Progress bar...</p>
+            </form>
+            <p>Times Watered: {{Button}}</p>
+        </div>
         {% endblock%}
     </body>
 </html>
+

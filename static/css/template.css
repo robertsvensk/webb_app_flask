@@ -1,0 +1,28 @@
+body {
+}
+
+p {
+}
+
+.content{
+    padding-left: 30px;
+}
+
+header{
+    background: lightblue;
+}
+
+.topnav {
+    padding-bottom: 10px;
+}
+
+.banner {
+    background: blue;
+    color: white;
+    padding-left: 70px;
+    vertical-align: middle;
+}
+
+.logo {
+    font-size: 3em;
+}

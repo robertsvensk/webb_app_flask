@@ -3,24 +3,33 @@
     <head>
         <meta charset="utf-8">
         <title> Flask Parent template</title>
-        <link rel="stylesheet" href="{{ url_for('static',   filename='css/template.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
     </head>
     <body>
         <header>
             <div class="container">
-                <h1 class="logo">First Web App</h1>
+                <div class="banner">
+                    <a class="logo">SnowBlunt</a>
+                    {% if Login is true %}
+                    <a href="{{ url_for('login') }}" style="color: white;">[Logout]</a>
+                    {% endif %}
+                </div>
                 <strong><nav>
                         <ul class="topnav">
                             <a href="{{ url_for('home') }}">Home</a>
                             <a href="{{ url_for('about') }}">About</a>
+                            {% if Login is true %}
                             <a href="{{ url_for('plants') }}">Plants</a>
+                            {% else %}
+                            <a href="{{ url_for('login') }}">Login</a>
+                            {% endif %}
                         </ul>
                     </nav></strong>
             </div>
         </header>
-
+        <div class="content">
         {% block content %}
         {% endblock %}
-        
+        </div>
     </body>
 </html>
