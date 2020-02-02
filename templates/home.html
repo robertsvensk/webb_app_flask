@@ -7,7 +7,11 @@
         {% extends "template.html" %}
         {% block content %}
 
-        <h1>Generic title</h1>
+        {% if Login is true %}
+            <h1>Welcome, {{user.name}}!</h1>
+        {% else %}
+            <h1>Welcome!</h1>
+        {% endif %}
         <p> Flask is Fun</p>
         <p> Let's try som instragram content here </p>
         {% endblock %}

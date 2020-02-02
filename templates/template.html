@@ -8,10 +8,12 @@
     <body>
         <header>
             <div class="container">
-                <div class="banner">
-                    <a class="logo">SnowBlunt</a>
+                <div class="banner" style="color: white;">
+                    <a class="logo"><b>SnowBlunt</b></a>
                     {% if Login is true %}
-                    <a href="{{ url_for('login') }}" style="color: white;">[Logout]</a>
+                    <a class="login" href="{{ url_for('logout') }}">[Logout]</a>
+                    {% else %}
+                    <a class="login" href="{{ url_for('login') }}">[Login]</a>
                     {% endif %}
                 </div>
                 <strong><nav>
@@ -20,8 +22,6 @@
                             <a href="{{ url_for('about') }}">About</a>
                             {% if Login is true %}
                             <a href="{{ url_for('plants') }}">Plants</a>
-                            {% else %}
-                            <a href="{{ url_for('login') }}">Login</a>
                             {% endif %}
                         </ul>
                     </nav></strong>

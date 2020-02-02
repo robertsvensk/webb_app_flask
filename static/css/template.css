@@ -18,11 +18,14 @@ header{
 
 .banner {
     background: blue;
-    color: white;
     padding-left: 70px;
-    vertical-align: middle;
 }
 
 .logo {
     font-size: 3em;
+    color: white;
+}
+
+.login {
+    color: white;
 }

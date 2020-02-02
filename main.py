@@ -3,6 +3,9 @@ import instagram
 
 app = Flask(__name__)
 
+
+
+####################### WATER ###############################
 WaterPlants = False
 def startWatering():
     global WaterPlants
@@ -16,12 +19,20 @@ def waterPlants():
             print(timer)
         WaterPlants = False
 
+####################### LOGIN ###############################
 LoggedOn = False
-# Login handling
+class User():
+    name = ''
 
+admin = User()
+admin.name = 'Robert'
+user = admin
+
+####################### ROUTES ##############################
 @app.route("/")
 def home():
-    return render_template("home.html", Login = LoggedOn)
+    global user
+    return render_template("home.html", Login = LoggedOn, user =user)
 
 @app.route("/about")
 def about():
@@ -34,6 +45,12 @@ def login():
         LoggedOn = True
         return redirect(url_for("home"))
     return render_template("login.html", Login = LoggedOn)
+
+@app.route("/logout")
+def logout():
+    global LoggedOn
+    LoggedOn = False
+    return redirect(url_for("home"))
 
 ButtonPressed = 0
 @app.route("/plants", methods=['GET', 'POST'])
@@ -57,6 +74,7 @@ def robert():
 def cathrine():
     return "Tack så mycket Cathrine!"
 
+############################# MAIN ############################
 if __name__ == "__main__":
     waterPlants()
     app.run(debug=True)
