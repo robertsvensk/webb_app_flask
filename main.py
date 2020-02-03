@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for
+from config import Config
+from forms import LoginForm
 import instagram
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
 ####################### WATER ###############################
 WaterPlants = False
@@ -39,10 +42,12 @@ def about():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     global LoggedOn
-    if request.method == "POST":
+    form = LoginForm()
+    if form.validate_on_submit():
         LoggedOn = True
+        flash('Login requested for user {}, rembember_me={}'.format(form.username.data, form.remember_me.data))
         return redirect(url_for("home"))
-    return render_template("login.html", Login = LoggedOn)
+    return render_template("login.html", title='Sign In', form=form)
 
 @app.route("/logout")
 def logout():

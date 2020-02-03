@@ -9,12 +9,12 @@
         <header>
             <div class="container">
                 <div class="banner" style="color: white;">
-                    <a class="logo"><b>SnowBlunt</b></a>
                     {% if Login is true %}
                     <a class="login" href="{{ url_for('logout') }}">[Logout]</a>
                     {% else %}
                     <a class="login" href="{{ url_for('login') }}">[Login]</a>
                     {% endif %}
+                    <a class="logo"><b>SnowBlunt</b></a>
                 </div>
                 <strong><nav>
                         <ul class="topnav">
@@ -26,6 +26,16 @@
                         </ul>
                     </nav></strong>
             </div>
+            <hr>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
         </header>
         <div class="content">
         {% block content %}

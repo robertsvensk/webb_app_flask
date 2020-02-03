@@ -2,16 +2,28 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title> Plants</title>
+        <title> Login </title>
    </head>
     <body>
         {% extends "template.html" %}
         {% block content %}
-        <div class="login">
+        <div class="login-form">
             <h2>Enter Credentials</h2>
-            <form method="post">
-                <input type="text">
-                <input type="submit" value="Login">
+            <form action-'' method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.username.label }} <br>
+                    {{ form.username(size=32) }}
+                </p>
+                <p>
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32) }}
+                </p>
+                <p>
+                    {{ form.remember_me() }}
+                    {{ form.remember_me.label }}
+                </p>
+                </p> {{ form.submit() }}</p>
             </form>
         </div>
         {% endblock%}

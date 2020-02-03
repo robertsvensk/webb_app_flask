@@ -1,4 +1,5 @@
 body {
+    color: black;
 }
 
 p {
@@ -13,19 +14,23 @@ header{
 }
 
 .topnav {
-    padding-bottom: 10px;
+    padding-bottom: 15px;
 }
 
 .banner {
     background: blue;
-    padding-left: 70px;
+    padding-left: 15px;
 }
 
 .logo {
+    background: blue;
     font-size: 3em;
     color: white;
+    padding-left: 15px;
 }
 
 .login {
     color: white;
+}
+.login-form {
 }
