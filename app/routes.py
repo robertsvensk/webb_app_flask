@@ -1,19 +1,60 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for, request
 from app import app
+from app.forms import LoginForm
+from app.plant import startWatering
 
-@app.route('/')
-@app.route('/index')
-def index():
-    user = {'username' : 'Robert'}
-    
-    posts = [
-        {
-            'author': {'username': 'Cathrine'},
-            'body': 'Beautiful day in Linköping'
-        },
-        {
-            'author': {'username': 'Robert'},
-            'body': 'Alot of snow comming down in Cham now!'
-        }
-    ]
-    return render_template('index.html', title='Home', user=user, posts=posts)
+####################### TEMP LOGIN ##########################
+LoggedOn = False
+class User():
+    name = ''
+admin = User()
+admin.name = 'Robert'
+user = admin
+
+####################### ROUTES ##############################
+@app.route("/")
+def home():
+    global user
+    return render_template("home.html", Login = LoggedOn, user = user)
+
+@app.route("/about")
+def about():
+    return render_template("about.html", Login = LoggedOn)
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    global LoggedOn
+    form = LoginForm()
+    if form.validate_on_submit():
+        LoggedOn = True
+        flash('Login requested for user {}, rembember_me={}'.format(form.username.data, form.remember_me.data))
+        return redirect(url_for("home"))
+    return render_template("login.html", title='Sign In', form=form)
+
+@app.route("/logout")
+def logout():
+    global LoggedOn
+    LoggedOn = False
+    return redirect(url_for("home"))
+
+ButtonPressed = 0
+@app.route("/plants", methods=['GET', 'POST'])
+def plants():
+    global ButtonPressed
+    if request.method == "POST":
+        ButtonPressed += 1
+        return(redirect(url_for("water")))
+    return render_template("plants.html", Button = ButtonPressed, Login = LoggedOn)
+
+@app.route("/water")
+def water():
+    startWatering()
+    return(redirect(url_for('plants')))
+
+@app.route("/robert")
+def robert():
+    return "Hello, Robert!"
+
+@app.route("/cathrine")
+def cathrine():
+    return "Tack så mycket Cathrine!"
