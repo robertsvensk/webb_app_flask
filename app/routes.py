@@ -11,16 +11,7 @@ admin = User()
 admin.name = 'Robert'
 user = admin
 
-####################### ROUTES ##############################
-@app.route("/")
-def home():
-    global user
-    return render_template("home.html", Login = LoggedOn, user = user)
-
-@app.route("/about")
-def about():
-    return render_template("about.html", Login = LoggedOn)
-
+####################### LOGIN ROUTES ##############################
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     global LoggedOn
@@ -37,6 +28,30 @@ def logout():
     LoggedOn = False
     return redirect(url_for("home"))
 
+#################### MAIN MENY ROUTES ######################
+@app.route("/")
+def home():
+    global user
+    return render_template("home.html", Login = LoggedOn, user = user)
+
+@app.route("/about")
+def about():
+    return render_template("about.html", Login = LoggedOn)
+
+@app.route("/forum")
+def forum():
+    posts = [
+        {
+            'author': {'username': 'John'},
+            'body': 'Beautiful day in Portland'
+        },
+        {
+            'author': {'username': 'Cathrine'},
+            'body': 'Lady Bird is an awesome movie!'
+        }
+    ]
+    return render_template("forum.html", title='Forum', posts=posts)
+
 ButtonPressed = 0
 @app.route("/plants", methods=['GET', 'POST'])
 def plants():
@@ -51,6 +66,7 @@ def water():
     startWatering()
     return(redirect(url_for('plants')))
 
+################# HIDDEN ROUTES ################################
 @app.route("/robert")
 def robert():
     return "Hello, Robert!"
