@@ -34,3 +34,6 @@ header{
 }
 .login-form {
 }
+.input-error {
+    color: red;
+}
