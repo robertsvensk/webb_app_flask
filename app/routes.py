@@ -54,7 +54,6 @@ def logout():
 #################### MAIN MENY ROUTES ######################
 @app.route("/")
 def home():
-    global user
     return render_template("home.html")
 
 @app.route("/about")
@@ -76,6 +75,7 @@ def forum():
     ]
     return render_template("forum.html", title='Forum', posts=posts)
 
+########################### USERS  ##################################
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -101,13 +101,41 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
-
-########################### USER PROFILE ############################
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('User {} not found.'.format(username))
+        return redirect(url_for('home'))
+    if user == current_user:
+        flash('You cannot follow yourself!')
+        return redirect(url_for('user', username=username))
+    current_user.follow(user)
+    db.session.commit()
+    flash('You are following {}!'.format(username))
+    return redirect(url_for('user', username=username))
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('User {} not found.'.format(username))
+        return redirect(url_for('home'))
+    if user == current_user:
+        flash('You cannot unfollow yourself!')
+        return redirect(url_for('user', username=username))
+    curent_user.unfollow(user)
+    db.session.commit()
+    flash('You are not folling {}.'.format(username))
+    return redirect(url_for('user', username=username))
 
 ########################### WATERING APP ############################
 ButtonPressed = 0
