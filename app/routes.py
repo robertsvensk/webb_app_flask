@@ -73,6 +73,12 @@ def forum():
     posts = current_user.followed_posts().all()
     return render_template("forum.html", title='Forum', form=form, posts=posts)
 
+@app.route('/explore')
+@login_required
+def explore():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('forum.html', title='Explore', posts=posts)
+
 ########################### USERS  ##################################
 @app.route('/user/<username>')
 @login_required
