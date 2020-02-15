@@ -6,9 +6,9 @@ from datetime import datetime
 
 #------------------------ APP ---------------------#
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
 from app.plant import startWatering
-from app.models import User
+from app.models import User, Post
 
 ####################### LOGIN ROUTES ##############################
 @app.route("/login", methods=['GET', 'POST'])
@@ -60,20 +60,18 @@ def home():
 def about():
     return render_template("about.html")
 
-@app.route("/forum")
+@app.route("/forum", methods=['GET', 'POST'])
 @login_required
 def forum():
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland'
-        },
-        {
-            'author': {'username': 'Cathrine'},
-            'body': 'Lady Bird is an awesome movie!'
-        }
-    ]
-    return render_template("forum.html", title='Forum', posts=posts)
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('forum'))
+    posts = current_user.followed_posts().all()
+    return render_template("forum.html", title='Forum', form=form, posts=posts)
 
 ########################### USERS  ##################################
 @app.route('/user/<username>')
