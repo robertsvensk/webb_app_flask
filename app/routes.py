@@ -5,6 +5,7 @@ from flask import g
 from flask_babel import get_locale
 from werkzeug.urls import url_parse
 from datetime import datetime
+from guess_language import guess_language
 
 #------------------------ APP ---------------------#
 from app import app, db
@@ -98,7 +99,11 @@ def about():
 def forum():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
+        language = guess_language(form.post.data)
+        if language == 'UKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(body=form.post.data, author=current_user,
+                    language=language)
         db.session.add(post)
         db.session.commit()
         flash(_('Your post is now live!'))

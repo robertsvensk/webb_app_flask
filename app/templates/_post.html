@@ -9,6 +9,9 @@
             {{ post.author.username }}
           </a>
           said {{ moment(post.timestamp).fromNow() }}: <br>{{ post.body }}
+          {% if post.language and post.langage != g.locale %}
+          <a href="#">{{ _('Translate') }}</a>
+          {% endif %}
         </td>
     </tr>
 </table>
