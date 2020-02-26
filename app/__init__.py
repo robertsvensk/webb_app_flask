@@ -25,6 +25,10 @@ app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
+
+from app.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
+
 login = LoginManager(app)
 login.login_view = 'login'
 login.login_message = _l('Please log in to access this page.')
@@ -69,4 +73,4 @@ if not app.debug:
 def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
-from app import routes, models, errors
+from app import routes, models
