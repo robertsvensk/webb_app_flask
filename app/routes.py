@@ -1,8 +1,8 @@
 #----------------------- LIB ----------------------#
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, g, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
-from flask import g
-from flask_babel import get_locale
+from flask_babel import get_locale, _
+
 from werkzeug.urls import url_parse
 from datetime import datetime
 from guess_language import guess_language
@@ -14,6 +14,7 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm,\
 from app.plant import startWatering
 from app.models import User, Post
 from app.email import send_password_reset_email
+from app.translate import translate
 
 ####################### LOGIN ROUTES ##############################
 @app.route("/login", methods=['GET', 'POST'])
@@ -219,6 +220,14 @@ def plants():
 def water():
     startWatering()
     return(redirect(url_for('plants')))
+
+################# TRANSLATE     ################################
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    return jsonify({'text': translate(request.form['text'],
+                                      request.form['source_language'],
+                                      request.form['dest_language'])})
 
 ################# HIDDEN ROUTES ################################
 @app.route("/robert")
