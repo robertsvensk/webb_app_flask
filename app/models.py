@@ -4,6 +4,7 @@ from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from hashlib import md5
+
 from flask_login import UserMixin
 
 #--------- APP ---------------------#

@@ -10,7 +10,7 @@
   <div class="container">
       <div class="banner" style="color: white;">
           {% if current_user.is_anonymous %}
-          <a class="login" href="{{ url_for('login') }}">[Login]</a>
+          <a class="login" href="{{ url_for('auth.login') }}">[Login]</a>
           {% else %}
           <a class="login" href="{{ url_for('logout') }}">[Logout]</a>
           {% endif %}
