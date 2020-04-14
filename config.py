@@ -1,5 +1,6 @@
 import os
-import dotenv import load_dotenv
+from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
@@ -23,3 +24,8 @@ class Config(object):
     # TRANSLATION
     LANGUAGES = ['en', 'es']
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
+
+    # Search
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+    ELASTICSEARCH_USER = os.environ.get('ELASTICSEARCH_USER')
+    ELASTICSEARCH_PWD = os.environ.get('ELASTICSEARCH_PWD')
