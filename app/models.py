@@ -24,7 +24,7 @@ class SearchableMixin(object):
                total
 
     @classmethod
-    def before_commit(cls, sesion):
+    def before_commit(cls, session):
         session._changes = {
             'add': list(session.new),
             'update': list(session.dirty),
@@ -33,7 +33,7 @@ class SearchableMixin(object):
 
     @classmethod
     def after_commit(cls, session):
-        for obj in session._changed['add']:
+        for obj in session._changes['add']:
             if isinstance(obj, SearchableMixin):
                 add_to_index(obj.__tablename__, obj)
         for obj in session._changes['update']:

@@ -15,6 +15,15 @@
           <a class="login" href="{{ url_for('auth.logout') }}">[Logout]</a>
           {% endif %}
           <a class="logo"><b>SnowBlunt</b></a>
+          {% if g.search_form %}
+            <form class="navbar-form navbar-right" method="get"
+                action="{{ url_for('main.search') }}">
+              <div class="form-group">
+                {{ g.search_form.q(size=20, class='form-control',
+                    placeholder=g.search_form.q.label.text) }}
+              </div>
+            </form>
+          {% endif %}
       </div>
       <strong><nav>
               <ul class="topnav">

@@ -1,12 +1,13 @@
 body {
     color: black;
+    padding-left: 30px
 }
 
 p {
 }
 
 .content{
-    padding-left: 30px;
+    /*padding-left: 30px;*/
 }
 
 header{
@@ -20,6 +21,7 @@ header{
 .banner {
     background: blue;
     padding-left: 15px;
+    padding-right: 15px;
 }
 
 .logo {
