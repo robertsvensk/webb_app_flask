@@ -85,8 +85,8 @@ class User(UserMixin, db.Model):
                                     foreign_keys='Message.sender_id',
                                     backref='author', lazy='dynamic')
     messages_received = db.relationship('Message',
-                                        foreign_keys='Message.recepient_id',
-                                        backref='recepient', lazy='dynamic')
+                                        foreign_keys='Message.recipient_id',
+                                        backref='recipient', lazy='dynamic')
     last_message_read_time = db.Column(db.DateTime)
 
     def set_password(self, password):
