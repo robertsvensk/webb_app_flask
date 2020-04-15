@@ -62,9 +62,8 @@ def forum():
 @login_required
 def explore():
     page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(page,
-                                                   current_app.config['POSTS_PER_PAGE'],
-                                                   False)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, current_app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('main.explore', page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.explore', page=posts.prev_num) \
@@ -117,7 +116,7 @@ def follow(username):
         return redirect(url_for('main.user', username=username))
     current_user.follow(user)
     db.session.commit()
-    flash(_('You are following %(username)!', username=username))
+    flash(_('You are following %(username)s!', username=username))
     return redirect(url_for('main.user', username=username))
 
 @bp.route('/unfollow/<username>')
@@ -130,9 +129,9 @@ def unfollow(username):
     if user == current_user:
         flash(_('You cannot unfollow yourself!'))
         return redirect(url_for('main.user', username=username))
-    curent_user.unfollow(user)
+    current_user.unfollow(user)
     db.session.commit()
-    flash(_('You are not folling %(username).', username=username))
+    flash(_('You are not folling %(username)s.', username=username))
     return redirect(url_for('main.user', username=username))
 
 @bp.route('/user/<username>/popup')
