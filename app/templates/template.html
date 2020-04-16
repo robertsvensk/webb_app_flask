@@ -25,19 +25,31 @@
             </form>
           {% endif %}
       </div>
-      <strong><nav>
-              <ul class="topnav">
-                  <a href="{{ url_for('main.home') }}">Home</a>
-                  <a href="{{ url_for('main.about') }}">About</a>
-                  <a href="{{ url_for('main.forum') }}">Forum</a>
-                  <a href="{{ url_for('main.explore') }}">Explore</a>
+      <nav class="navbar navbar-default">
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                  <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                  <li><a href="{{ url_for('main.about') }}">About</a></li>
+                  <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
+                  <li><a href="{{ url_for('main.explore') }}">Explore</a></li>
                   {% if current_user.is_authenticated %}
-                  <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-                  <a href="{{ url_for('main.messages') }}">Messages</a>
-                  <a href="{{ url_for('main.plants') }}">Plants</a>
+                  <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
+                  <li>
+                    <a href="{{ url_for('main.messages') }}">
+                      Messages
+                      {% set new_messages = current_user.new_message() %}
+                      <span id="message_count" class="badge"
+                            style="visibility: {% if new_messages %} visible
+                                               {% else %}hidden {% endif %}">
+                          {{ new_messages }}
+                      </span>
+                    </a>
+                  </li>
+                  <li><a href="{{ url_for('main.plants') }}">Plants</a></li>
                   {% endif %}
               </ul>
-          </nav></strong>
+          </div>
+        </nav>
   </div>
   <div class="container">
     <hr>
@@ -76,6 +88,7 @@
         });
     }
 
+    // Hover name for short profile
     $(function() {
       var timer = null;
       $('.user_popup').hover(
@@ -117,5 +130,28 @@
         }
       )
     });
+
+    function set_message_count(n) {
+      $('#message_count').text(n);
+      $('#message_count').css('visibility', n ? 'visible': 'hidden');
+    }
+
+    {% if current_user.is_authenticated %}
+    $(function() {
+      var since = 0;
+      setInterval(function () {
+        $.ajax('{{ url_for('main.notifications') }}?since=' + since).done(
+          function (notifications) {
+            for (var i = 0; i < notifications.length; i++) {
+              if (notifications[i].name == 'unread_message_count') {
+                set_message_count(notifications[i].data)
+              }
+              since = notifications[i].timestamp;
+            }
+          }
+        );
+      }, 10000);
+    });
+    {% endif %}
 </script>
 {% endblock %}
