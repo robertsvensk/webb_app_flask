@@ -8,7 +8,7 @@ import json
 import redis
 import rq
 
-from flask import current_app
+from flask import current_app, url_for
 from flask_login import UserMixin
 
 #--------- APP ---------------------#
@@ -61,7 +61,7 @@ class PaginatedAPIMixin(object):
     def to_collection_dict(query, page, per_page, endpoint, **kwargs):
         resources = query.paginate(page, per_page, False)
         data = {
-            'items': [item.to_dict() for item in resources.item],
+            'items': [item.to_dict() for item in resources.items],
             '_meta': {
                 'page': page,
                 'per_page': per_page,
@@ -77,6 +77,7 @@ class PaginatedAPIMixin(object):
                                 **kwargs) if resources.has_prev else None
             }
         }
+        return data
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
