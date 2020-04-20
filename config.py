@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from elasticsearch import Elasticsearch
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
@@ -29,3 +28,6 @@ class Config(object):
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     ELASTICSEARCH_USER = os.environ.get('ELASTICSEARCH_USER')
     ELASTICSEARCH_PWD = os.environ.get('ELASTICSEARCH_PWD')
+
+    # Background jobs
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'

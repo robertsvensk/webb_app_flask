@@ -149,6 +149,21 @@ class User(UserMixin, db.Model):
         db.session.add(n)
         return n
 
+    def launch_task(self, name, descrption, *args, **kwargs):
+        rq_job = current_app.task_queue.enqueue('app.tasks' + name, self.id,
+                                                *args, **kwargs)
+        task = Task(id=rq_job.get_id(), name=name, description=descrption,
+                    user=self)
+        db.session.add(task)
+        return task
+
+    def get_tasks_in_progress(self):
+        return Task.query.filter_by(user=self, complete=False).all()
+
+    def get_task_in_progress(self, name):
+        return Task.query.filter_by(name=name, user=self,
+                                    complete=False).first()
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
