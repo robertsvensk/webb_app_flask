@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-26 14:29+0100\n"
+"POT-Creation-Date: 2020-04-20 12:34+0200\n"
 "PO-Revision-Date: 2020-02-24 15:45+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,71 +18,166 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: app/__init__.py:30
+#: app/__init__.py:31
 msgid "Please log in to access this page."
 msgstr ""
 
-#: app/forms.py:9
-msgid "Username"
-msgstr ""
-
-#: app/routes.py:30
-msgid "Invalid username or password"
-msgstr ""
-
-#: app/routes.py:50
-msgid "Check your email for the instruction to reset your password"
-msgstr ""
-
-#: app/routes.py:66
-msgid "Your password has been reset"
-msgstr ""
-
-#: app/routes.py:80
-msgid "Congratulations, you are now a registered user!"
-msgstr ""
-
-#: app/routes.py:110
-msgid "Your post is now live!"
-msgstr ""
-
-#: app/routes.py:163
-msgid "Your changes have been saved."
-msgstr ""
-
-#: app/routes.py:182 app/routes.py:197
-msgid "User %(username) not found."
-msgstr ""
-
-#: app/routes.py:185
-msgid "You cannot follow yourself!"
-msgstr ""
-
-#: app/routes.py:189
-msgid "You are following %(username)!"
-msgstr ""
-
-#: app/routes.py:200
-msgid "You cannot unfollow yourself!"
-msgstr ""
-
-#: app/routes.py:204
-msgid "You are not folling %(username)."
-msgstr ""
-
-#: app/translate.py:10
+#: app/translate.py:8
 msgid "Error: the translation service is not configured."
 msgstr ""
 
-#: app/translate.py:18
+#: app/translate.py:16
 msgid "Error: the translation service failed."
 msgstr ""
 
-#: app/templates/_post.html:19
+#: app/auth/email.py:7
+msgid "[SnowBlunt] Reset Your Password"
+msgstr ""
+
+#: app/auth/forms.py:10
+msgid "Username"
+msgstr ""
+
+#: app/auth/routes.py:24
+msgid "Invalid username or password"
+msgstr ""
+
+#: app/auth/routes.py:44
+msgid "Check your email for the instruction to reset your password"
+msgstr ""
+
+#: app/auth/routes.py:60
+msgid "Your password has been reset"
+msgstr ""
+
+#: app/auth/routes.py:74
+msgid "Congratulations, you are now a registered user!"
+msgstr ""
+
+#: app/main/forms.py:30 app/main/routes.py:212
+msgid "Search"
+msgstr ""
+
+#: app/main/forms.py:40
+msgid "Message"
+msgstr ""
+
+#: app/main/forms.py:42
+msgid "Submit"
+msgstr ""
+
+#: app/main/routes.py:47
+msgid "Your post is now live!"
+msgstr ""
+
+#: app/main/routes.py:99
+msgid "Your changes have been saved."
+msgstr ""
+
+#: app/main/routes.py:112 app/main/routes.py:127
+msgid "User %(username) not found."
+msgstr ""
+
+#: app/main/routes.py:115
+msgid "You cannot follow yourself!"
+msgstr ""
+
+#: app/main/routes.py:119
+#, python-format
+msgid "You are following %(username)s!"
+msgstr ""
+
+#: app/main/routes.py:130
+msgid "You cannot unfollow yourself!"
+msgstr ""
+
+#: app/main/routes.py:134
+#, python-format
+msgid "You are not folling %(username)s."
+msgstr ""
+
+#: app/main/routes.py:155
+msgid "Your message has been sent."
+msgstr ""
+
+#: app/main/routes.py:157
+msgid "Send Message"
+msgstr ""
+
+#: app/main/routes.py:193
+msgid "An export is currently in progress"
+msgstr ""
+
+#: app/main/routes.py:195
+msgid "Exporting posts..."
+msgstr ""
+
+#: app/templates/_post.html:22
 msgid "Translate"
 msgstr ""
 
-#: app/templates/template.html:65
+#: app/templates/messages.html:4
+msgid "Messages"
+msgstr ""
+
+#: app/templates/messages.html:12
+msgid "Newer messages"
+msgstr ""
+
+#: app/templates/messages.html:17
+msgid "Older messages"
+msgstr ""
+
+#: app/templates/search.html:4
+msgid "Search Results"
+msgstr ""
+
+#: app/templates/search.html:13
+msgid "Previous results"
+msgstr ""
+
+#: app/templates/send_message.html:5
+#, python-format
+msgid "Send Message to %(recipient)s"
+msgstr ""
+
+#: app/templates/template.html:97
 msgid "Error: Could not contact server."
 msgstr ""
+
+#: app/templates/user.html:21
+msgid "Export you posts"
+msgstr ""
+
+#: app/templates/user.html:35
+msgid "Send private message"
+msgstr ""
+
+#: app/templates/user_popup.html:13
+msgid "Last seen on"
+msgstr ""
+
+#: app/templates/user_popup.html:16
+#, python-format
+msgid "%(count)d followers"
+msgstr ""
+
+#: app/templates/user_popup.html:17
+#, python-format
+msgid "%(count)d following"
+msgstr ""
+
+#: app/templates/user_popup.html:21
+msgid "Follow"
+msgstr ""
+
+#: app/templates/user_popup.html:25
+msgid "Unfollow"
+msgstr ""
+
+#~ msgid "You are following %(username)!"
+#~ msgstr ""
+
+#~ msgid "You are not folling %(username)."
+#~ msgstr ""
 
