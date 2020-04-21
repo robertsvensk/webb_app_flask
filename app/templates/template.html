@@ -33,10 +33,9 @@
                   <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
                   <li><a href="{{ url_for('main.explore') }}">Explore</a></li>
                   {% if current_user.is_authenticated %}
-                  <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
                   <li>
-                    <a href="{{ url_for('main.messages') }}">
-                      Messages
+                    <a href="{{ url_for('main.user', username=current_user.username) }}">
+                      Profile
                       {% set new_messages = current_user.new_message() %}
                       <span id="message_count" class="badge"
                             style="visibility: {% if new_messages %} visible

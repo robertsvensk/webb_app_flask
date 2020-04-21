@@ -77,15 +77,37 @@ def explore():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
+
     page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(page,
-                                               current_app.config['POSTS_PER_PAGE'],
-                                               False)
+
+    messages = current_user.messages_received.order_by(
+        Message.timestamp.desc()).limit(2).all()
+
+    posts = current_user.posts.paginate(page,
+                                        current_app.config['POSTS_PER_PAGE'],
+                                        False)
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
         if posts.has_prev else None
-    return render_template('user.html', user=user, posts=posts.items,
+    return render_template('user.html', user=user, messages=messages, posts=posts.items,
+                           next_url=next_url, prev_url=prev_url)
+
+@bp.route('/messages')
+@login_required
+def messages():
+    current_user.last_message_read_time = datetime.utcnow()
+    current_user.add_notification('unread_message_count', 0)
+    db.session.commit()
+    page = request.args.get('page', 1, type=int)
+    messages = current_user.messages_received.order_by(
+        Message.timestamp.desc()).paginate(
+            page, current_app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('main.messages', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('main.messages', page=messages.prev_num) \
+        if messages.has_prev else None
+    return render_template('messages.html', user=current_user, messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
@@ -157,22 +179,6 @@ def send_message(recipient):
     return render_template('send_message.html', title=_('Send Message'),
                            form=form, recipient=recipient)
 
-@bp.route('/messages')
-@login_required
-def messages():
-    current_user.last_message_read_time = datetime.utcnow()
-    current_user.add_notification('unread_message_count', 0)
-    db.session.commit()
-    page = request.args.get('page', 1, type=int)
-    messages = current_user.messages_received.order_by(
-        Message.timestamp.desc()).paginate(
-            page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('main.messages', page=messages.next_num) \
-        if messages.has_next else None
-    prev_url = url_for('main.messages', page=messages.prev_num) \
-        if messages.has_prev else None
-    return render_template('messages.html', messages=messages.items,
-                           next_url=next_url, prev_url=prev_url)
 
 @bp.route('/notifications')
 @login_required
@@ -196,6 +202,17 @@ def export_posts():
         db.session.commit()
     return redirect(url_for('main.user', username=current_user.username))
 
+
+@bp.route('/water_plants')
+@login_required
+def water_plants():
+    if current_user.get_task_in_progress('water_plants'):
+        flash('Plants are being watered')
+    else:
+        current_user.launch_task('example', 'Watering plants...', 20)
+        db.session.commit()
+    return redirect(url_for('main.plants'))
+
 ########################### Search #################################
 @bp.route('/search')
 @login_required
@@ -214,20 +231,10 @@ def search():
 
 ########################### WATERING APP ############################
 ButtonPressed = 0
-@bp.route("/plants", methods=['GET', 'POST'])
+@bp.route("/plants", methods=['GET'])
 @login_required
 def plants():
-    global ButtonPressed
-    if request.method == "POST":
-        ButtonPressed += 1
-        return(redirect(url_for("water")))
     return render_template("plants.html", Button = ButtonPressed)
-
-@bp.route("/water")
-@login_required
-def water():
-    startWatering()
-    return(redirect(url_for('main.plants')))
 
 ################# TRANSLATE     ################################
 @bp.route('/translate', methods=['POST'])
@@ -236,12 +243,3 @@ def translate_text():
     return jsonify({'text': translate(request.form['text'],
                                       request.form['source_language'],
                                       request.form['dest_language'])})
-
-################# HIDDEN ROUTES ################################
-@bp.route("/robert")
-def robert():
-    return "Hello, Robert!"
-
-@bp.route("/cathrine")
-def cathrine():
-    return "Tack så mycket Cathrine!"

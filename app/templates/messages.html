@@ -1,7 +1,7 @@
-{% extends "template.html" %}
+{% extends "user_temp.html" %}
 
-{% block app_content %}
-  <h1>{{ _('Messages') }}</h1>
+{% block user_content %}
+  <h2>{{ _('Messages') }}</h2>
   {% for post in messages %}
     {% include '_post.html' %}
   {% endfor %}
