@@ -3,6 +3,14 @@
 
 {% block app_content %}
     <h1> Welcome to the Forum, {{ current_user.username }}! </h1>
+    <nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+        <li><a href="{{ url_for('main.forum') }}">Following</a></li>
+        <li><a href="{{ url_for('main.explore') }}">Explore</a></li>
+    </ul>
+    </div>
+    </nav>
     {% if form %}
       <div class="row">
         <div class="col-md-4">
