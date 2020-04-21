@@ -1,36 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title> Plants</title>
-        <style> 
-            .logo{
-                background-color: blue;
-                color: white;
-            }
-            body {
-            }
-
-            .watering{
-            }
-                 
-            input{
-             background-color: lightgreen;
-            }
-        </style>
-    </head>
-    <body>
-        {% extends "template.html" %}
-        {% block app_content %}
-        <div class="watering">
-            <h2>Plant system</h2>
-            <form method="post">
-                <input type="submit" value="Water the Plants">
-                <p> Progress bar...</p>
-            </form>
-            <p>Times Watered: {{Button}}</p>
-        </div>
-        {% endblock%}
-    </body>
-</html>
-
+{% extends "template.html" %}
+{% block app_content %}
+<div class="watering">
+  <h2>Plant system</h2>
+  <a class='btn btn-primary' href='{{ url_for('main.water_plants') }}' role='button'>Water the plants</a>
+  <p>Last time watered: <!-- add time from db --> </p>
+</div>
+{% endblock%}

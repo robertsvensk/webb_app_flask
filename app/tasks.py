@@ -51,14 +51,12 @@ def export_posts(user_id):
         _set_task_progress(100)
         app.logger.error('unhandled exception', exc_info=sys.exc_info())
 
-def example(seconds):
+def example(user_id, seconds):
     job = get_current_job()
     print('Starting task')
     for i in range(seconds):
-        job.meta['progress'] = 100.0 * i / seconds
-        job.save_meta()
+        _set_task_progress(100 * i // seconds)
         print(i)
         time.sleep(1)
-    job.meta['progress'] = 100
-    job.save_meta()
+    _set_task_progress(100)
     print('Task completed')
