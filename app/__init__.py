@@ -17,8 +17,6 @@ from flask_moment import Moment
 from flask_babel import Babel
 from flask_babel import lazy_gettext as _l
 
-import instagram
-
 #------------------- APP -----------------------------------#
 from config import Config
 
@@ -51,7 +49,7 @@ def create_app(config_class=Config):
                                                  app.config['ELASTICSEARCH_PWD'])) \
         if app.config['ELASTICSEARCH_URL'] else None
     app.redis = Redis.from_url(app.config['REDIS_URL'])
-    app.task_queue = rq.Queue('webb_app_flask-tasks', connection=app.redis)
+    app.task_queue = rq.Queue('snowblunt_webb-tasks', connection=app.redis)
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
