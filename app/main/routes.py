@@ -11,9 +11,13 @@ from guess_language import guess_language
 from app import db
 from app.main.forms import EditProfileForm, PostForm, SearchForm, MessageForm
 from app.plant import startWatering
-from app.models import User, Post, Message, Notification
+from app.models import User, Post, Message, Notification, Task
 from app.translate import translate
 from app.main import bp
+
+
+def _get_watering_in_queue():
+    return Task.query.filter_by(name='water_plants', complete=False).all()
 
 @bp.before_request
 def before_request():
@@ -202,17 +206,6 @@ def export_posts():
         db.session.commit()
     return redirect(url_for('main.user', username=current_user.username))
 
-
-@bp.route('/water_plants')
-@login_required
-def water_plants():
-    if current_user.get_task_in_progress('water_plants'):
-        flash('Plants are being watered')
-    else:
-        current_user.launch_task('example', 'Watering plants...', 20)
-        db.session.commit()
-    return redirect(url_for('main.plants'))
-
 ########################### Search #################################
 @bp.route('/search')
 @login_required
@@ -230,11 +223,34 @@ def search():
                             next_url=next_url, prev_url=prev_url)
 
 ########################### WATERING APP ############################
-ButtonPressed = 0
 @bp.route("/plants", methods=['GET'])
 @login_required
 def plants():
-    return render_template("plants.html", Button = ButtonPressed)
+    entries_per_page = 10
+    page = request.args.get('page', 1, type=int)
+
+    log_entries = range(entries_per_page)
+    next_url = url_for('main.plants', page=page + 1) \
+        if False else None
+    prev_url = url_for('main.plants', page=page - 1) \
+        if False else None
+
+    return render_template("plants.html", user=current_user, log_entries=log_entries,
+                            next_url=next_url, prev_url=prev_url)
+
+@bp.route('/water_plants')
+@login_required
+def water_plants():
+    if _get_watering_in_queue():
+        flash('Plants are being watered by ' +
+              str(User.query.filter_by(id=_get_watering_in_queue()[0].user_id).first().username) +
+              ', Progress ' + str(_get_watering_in_queue()[0].get_progress()) + '%')
+    else:
+        description = ' Watering plants...'
+        current_user.launch_task('water_plants', description, 20)
+        db.session.commit()
+        g.last_watered = datetime.utcnow()
+    return redirect(url_for('main.plants'))
 
 ################# TRANSLATE     ################################
 @bp.route('/translate', methods=['POST'])

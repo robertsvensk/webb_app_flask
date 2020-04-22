@@ -51,6 +51,9 @@ def export_posts(user_id):
         _set_task_progress(100)
         app.logger.error('unhandled exception', exc_info=sys.exc_info())
 
+def water_plants(user_id, seconds):
+    example(user_id,seconds)
+
 def example(user_id, seconds):
     job = get_current_job()
     print('Starting task')

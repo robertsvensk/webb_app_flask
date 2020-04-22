@@ -1,8 +1,46 @@
 {% extends "template.html" %}
+
 {% block app_content %}
-<div class="watering">
-  <h2>Plant system</h2>
-  <a class='btn btn-primary' href='{{ url_for('main.water_plants') }}' role='button'>Water the plants</a>
-  <p>Last time watered: <!-- add time from db --> </p>
+
+<h2>Plant system</h2>
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-4">
+      <a class='btn btn-primary' href='{{ url_for('main.water_plants') }}' role='button'>Water the plants</a>
+      <p>Last time watered: {{ g.last_watered }} <!-- add time from db --></p>
+
+      <h3>Watering Log</h3>
+      {% for item in log_entries %}
+        <p> {{ item }}</p>
+      {% endfor %}
+
+      <nav aria-label="...">
+        <ul class="pager">
+          <li class="previous{% if not prev_url %} disabled{% endif %}">
+            <a href="{{ prev_url or '#'}}">
+              <span aria-hidden="true">&larr;</span> Newer posts
+            </a>
+          </li>
+          <li class="next{% if not next_url %} disabled{% endif %}">
+            <a href="{{ next_url or '#'}}">
+              Older posts <span aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="col-md">
+      <div class="media">
+        <img class="mr-3" src="{{ user.avatar(512) }}" alt="No feed">
+        <div class="media-body">
+          Camera feed
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
 {% endblock%}

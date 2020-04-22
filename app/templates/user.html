@@ -2,11 +2,11 @@
 
 {% block user_content %}
     {% if user == current_user %}
-      <h2><a href="{{ url_for('main.messages') }}">{{ _('Messages') }}</a></h2>
-      <p> Most recent messages: </p>
+      <h2>{{ _('Messages') }}</h2>
       {% for post in messages %}
         {% include '_post.html' %}
       {% endfor %}
+      <a href="{{ url_for('main.messages') }}">More messages...</a>
     {% endif %}
 
     <h2>{{ _('Forum Posts') }}</h2>
