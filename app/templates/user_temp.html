@@ -19,7 +19,7 @@
 
             <p>
             {% if user == current_user %}
-                <a href="{{ url_for('main.edit_profile') }}">Edit your profile</a>
+                <a data-toggle="collapse" href="#edit_profile">Edit your profile</a>
               {% if not current_user.get_task_in_progress('export_posts') %}
                   <a href="{{ url_for('main.export_posts') }}">
                     {{ _('Export you posts') }}
@@ -30,29 +30,32 @@
             {% else %}
                 <a href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a>
             {% endif %}
-            {% if user != current_user and not(form) %}
-            <a href="{{ url_for('main.send_message', recipient=user.username)}}">{{ _('Send private message') }}</a>
+            {% if user != current_user %}
+            <a data-toggle="collapse" href="#send_message">{{ _('Send private message') }}</a>
             {% endif %}
             </p>
           </td>
         </tr>
       </table>
     </div>
-  {% if form %}
-    {% if user == current_user %}
+    {% if form %}
     <div class="col-sm-4">
-      <h1>Edit Profile</h1>
+        <div class="collapse" id="edit_profile">
+          <h1>Edit Profile</h1>
           {{ wtf.quick_form(form) }}
+        </div>
+
     </div>
-    {% else %}
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-      {{ wtf.quick_form(form) }}
     </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="collapse" id="send_message">
+          {{ wtf.quick_form(form) }}
+        </div>
+      </div>
     {% endif %}
-  {% endif %}
   </div>
+
   {% block user_content %}
   {% endblock %}
 {% endblock %}

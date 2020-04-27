@@ -11,8 +11,8 @@
     {% endif %}
     {% endif %}
 
+    <h2>{{ _('Forum Posts') }}</h2>
     {% if posts %}
-      <h2>{{ _('Forum Posts') }}</h2>
       {% for post in posts %}
           {% include '_post.html' %}
       {% endfor %}
@@ -30,5 +30,7 @@
           </li>
         </ul>
       </nav>
+    {% else %}
+      <p> When you post something in the forum you will see it here. </p>
     {% endif %}
 {% endblock %}

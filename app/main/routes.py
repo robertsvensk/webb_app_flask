@@ -73,14 +73,37 @@ def explore():
                            prev_url=prev_url)
 
 ########################### USERS  ##################################
-@bp.route('/user/<username>')
+@bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
-def user(username, **kwargs):
+def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
 
-    messages = current_user.messages_received.order_by(
-        Message.timestamp.desc()).limit(2).all()
+    if user == current_user:
+        form = EditProfileForm(current_user.username)
+        if form.validate_on_submit():
+            current_user.username = form.username.data
+            current_user.about_me = form.about_me.data
+            db.session.commit()
+            flash(_('Your changes have been saved.'))
+            return redirect(url_for('main.user', username=username))
+        elif request.method == 'GET':
+            form.username.data = current_user.username
+            form.about_me.data = current_user.about_me
+    else:
+        form = MessageForm()
+        if form.validate_on_submit():
+            msg = Message(author=current_user, recipient=user,
+                          body=form.message.data)
+            db.session.add(msg)
+            user.add_notification('unread_message_count', user.new_message())
+            db.session.commit()
+            flash(_('Your message has been sent.'))
+            return redirect(url_for('main.user', username=username))
+
+    messages = current_user.messages_received \
+        .order_by(Message.timestamp.desc()) \
+        .limit(2)
 
     posts = current_user.posts.paginate(page,
                                         current_app.config['POSTS_PER_PAGE'],
@@ -89,39 +112,8 @@ def user(username, **kwargs):
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
         if posts.has_prev else None
-    return render_template('user.html', user=user, messages=messages, posts=posts.items,
+    return render_template('user.html', form=form, user=user, messages=messages, posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
-
-@bp.route('/edit_profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
-    form = EditProfileForm(current_user.username)
-    if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.about_me = form.about_me.data
-        db.session.commit()
-        flash(_('Your changes have been saved.'))
-        return redirect(url_for('main.edit_profile'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.about_me.data = current_user.about_me
-    return render_template('user.html', title='Edit Profile', form=form, user=current_user)
-
-@bp.route('/send_message/<recipient>', methods=['GET', 'POST'])
-@login_required
-def send_message(recipient):
-    user = User.query.filter_by(username=recipient).first_or_404()
-    form = MessageForm()
-    if form.validate_on_submit():
-        msg = Message(author=current_user, recipient=user,
-                      body=form.message.data)
-        db.session.add(msg)
-        user.add_notification('unread_message_count', user.new_message())
-        db.session.commit()
-        flash(_('Your message has been sent.'))
-        return redirect(url_for('main.user', username=recipient))
-    return render_template('user.html', title=_('Send Message'),
-                           form=form, user=user)
 
 @bp.route('/messages')
 @login_required
