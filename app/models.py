@@ -274,6 +274,7 @@ class Task(db.Model):
     description = db.Column(db.String(120))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     complete = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def get_rq_job(self):
         try:

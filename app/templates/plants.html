@@ -6,7 +6,7 @@
 
   <div class="col-md-8" style="margin:auto">
     <div class="media">
-      <img class="mr-3" src="https://picsum.photos/id/159/600/500" alt="No feed">
+      <img class="mr-3" src="{{ user.avatar(512) }}" alt="No feed">
       <div class="media-body">
         Camera feed
       </div>
@@ -15,11 +15,11 @@
 
   <div class="col-md-4">
     <a class='btn btn-primary' href='{{ url_for('main.water_plants') }}' role='button'>Water the plants</a>
-    <p>Last time watered: {{ g.last_watered }} <!-- add time from db --></p>
+    <p>Last time watered: {{ moment(log_entries[0].timestamp).calendar() }} <!-- add time from db --></p>
 
     <h3>Watering Log</h3>
     {% for item in log_entries %}
-      <p> {{ item }}</p>
+      <p>{{ moment(item.timestamp).format('lll') }} {{ item.user.username }}</p>
     {% endfor %}
 
     <nav aria-label="...">

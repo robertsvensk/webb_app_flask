@@ -223,13 +223,17 @@ def plants():
     entries_per_page = 14
     page = request.args.get('page', 1, type=int)
 
-    log_entries = range(entries_per_page)
-    next_url = url_for('main.plants', page=page + 1) \
-        if False else None
-    prev_url = url_for('main.plants', page=page - 1) \
-        if False else None
+    log_entries = Task.query.filter(Task.name =='water_plants',
+                                    Task.timestamp != None) \
+                    .order_by(Task.timestamp.desc()) \
+                    .paginate(page, entries_per_page, False)
+    next_url = url_for('main.plants', page=log_entries.next_num) \
+        if log_entries.has_next else None
+    prev_url = url_for('main.plants', page=log_entries.prev_num) \
+        if log_entries.has_prev else None
 
-    return render_template("plants.html", user=current_user, log_entries=log_entries,
+    #log_entries = range(entries_per_page)
+    return render_template("plants.html", user=current_user, log_entries=log_entries.items,
                             next_url=next_url, prev_url=prev_url)
 
 @bp.route('/water_plants')
@@ -237,7 +241,7 @@ def plants():
 def water_plants():
     if _get_watering_in_queue():
         flash('Plants are being watered by ' +
-              str(User.query.filter_by(id=_get_watering_in_queue()[0].user_id).first().username) +
+              _get_watering_in_queue()[0].user.username +
               ', Progress ' + str(_get_watering_in_queue()[0].get_progress()) + '%')
     else:
         description = ' Watering plants...'
