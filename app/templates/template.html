@@ -85,8 +85,10 @@
       {% endif %}
     {% endwith %}
   {% endif %}
-  {% block app_content %}
-  {% endblock %}
+  <div class="container-fluid">
+    {% block app_content %}
+    {% endblock %}
+  </div>
 {% endblock %}
 
 {% block scripts %}
