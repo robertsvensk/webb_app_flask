@@ -32,10 +32,6 @@ def before_request():
 def home():
     return render_template("home.html")
 
-@bp.route("/about")
-def about():
-    return render_template("about.html")
-
 @bp.route("/forum", methods=['GET', 'POST'])
 @login_required
 def forum():
@@ -226,7 +222,7 @@ def search():
 @bp.route("/plants", methods=['GET'])
 @login_required
 def plants():
-    entries_per_page = 10
+    entries_per_page = 14
     page = request.args.get('page', 1, type=int)
 
     log_entries = range(entries_per_page)

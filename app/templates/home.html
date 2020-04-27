@@ -1,19 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-    <title> Robert Svensk </title>
-    </head>
-    <body>
-        {% extends "template.html" %}
-        {% block app_content %}
+<head>
+<title> Robert Svensk </title>
+</head>
 
-        {% if current_user.is_anonymous %}
-            <h1>Welcome!</h1>
-        {% else %}
-            <h1>Welcome, {{ current_user.username }}!</h1>
-        {% endif %}
-        <p> Flask is Fun</p>
-        <p> Let's try som instragram content here </p>
-        {% endblock %}
-    </body>
-</html>
+{% extends "template.html" %}
+
+{% block app_content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-7">
+      {% if current_user.is_anonymous %}
+          <h1>Welcome!</h1>
+      {% else %}
+          <h1>Welcome, {{ current_user.username }}!</h1>
+      {% endif %}
+      <p> Flask is Fun</p>
+      <p> Let's try som instragram content here </p>
+    </div>
+    <div class="col-sm-5">
+      <br>
+      <h2>About Me</h2>
+      <p> I'm a Engineer from Sweden crazy about the outdoors.</p>
+      <p> My professional experience is mainly of Embedded Software Development but it also include agile work methodology.</p>
+    </div>
+  </div>
+</div>
+{% endblock%}

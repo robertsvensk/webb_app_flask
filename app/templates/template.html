@@ -2,96 +2,91 @@
 
 {% block styles %}
 {{ super() }}
-  <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/template.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/template.css') }}">
 {% endblock %}
 
 {% block navbar %}
-  <div class="container">
-      <div class="banner" style="color: white;">
-          {% if current_user.is_anonymous %}
-          <a class="login" href="{{ url_for('auth.login') }}">[Login]</a>
-          {% else %}
-          <a class="login" href="{{ url_for('auth.logout') }}">[Logout]</a>
-          {% endif %}
-          <a class="logo"><b>SnowBlunt</b></a>
-          {% if g.search_form %}
-            <form class="navbar-form navbar-right" method="get"
-                action="{{ url_for('main.search') }}">
-              <div class="form-group">
-                {{ g.search_form.q(size=20, class='form-control',
-                    placeholder=g.search_form.q.label.text) }}
-              </div>
-            </form>
-          {% endif %}
-      </div>
-      <nav class="navbar navbar-default">
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="nav navbar-nav">
-                  <li><a href="{{ url_for('main.home') }}">Home</a></li>
-                  <li><a href="{{ url_for('main.about') }}">About</a></li>
-                  <li><a href="{{ url_for('main.plants') }}">Plants</a></li>
-                  <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
-                  {% if current_user.is_authenticated %}
-                  <li class='nav-item dropdown'>
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                        href="#">
+    <div class="banner" style="color: white;">
+        {% if current_user.is_anonymous %}
+        <a class="login" href="{{ url_for('auth.login') }}">[Login]</a>
+        {% else %}
+        <a class="login" href="{{ url_for('auth.logout') }}">[Logout]</a>
+        {% endif %}
+        <a class="logo" href="{{ url_for('main.home') }}"><b>SnowBlunt</b></a>
+        {% if g.search_form %}
+          <form class="navbar-form navbar-right" method="get"
+              action="{{ url_for('main.search') }}">
+            <div class="form-group">
+              {{ g.search_form.q(size=20, class='form-control',
+                  placeholder=g.search_form.q.label.text) }}
+            </div>
+          </form>
+        {% endif %}
+    </div>
+    <nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                <li><a href="{{ url_for('main.plants') }}">Plants</a></li>
+                <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
+                {% if current_user.is_authenticated %}
+                <li class='nav-item dropdown'>
+                  <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                      href="#">
+                    Profile
+                    <span class="caret"></span>
+                    {% set new_messages = current_user.new_message() %}
+                    <span id="message_count" class="badge"
+                          style="visibility: {% if new_messages %} visible
+                                             {% else %}hidden {% endif %}">
+                        {{ new_messages }}
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ url_for('main.user', username=current_user.username) }}">
                       Profile
-                      <span class="caret"></span>
+                    </a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('main.messages') }}">
+                      Messages
                       {% set new_messages = current_user.new_message() %}
                       <span id="message_count" class="badge"
                             style="visibility: {% if new_messages %} visible
                                                {% else %}hidden {% endif %}">
                           {{ new_messages }}
                       </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{{ url_for('main.user', username=current_user.username) }}">
-                        Profile
-                      </a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('main.messages') }}">
-                        Messages
-                        {% set new_messages = current_user.new_message() %}
-                        <span id="message_count" class="badge"
-                              style="visibility: {% if new_messages %} visible
-                                                 {% else %}hidden {% endif %}">
-                            {{ new_messages }}
-                        </span>
-                      </a></li>
-                    </ul>
-                  </li>
-                  {% endif %}
-              </ul>
-          </div>
-        </nav>
-  </div>
+                    </a></li>
+                  </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+      </nav>
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    {% if current_user.is_authenticated %}
-      {% with tasks = current_user.get_tasks_in_progress() %}
-        {% if tasks %}
-          {% for task in tasks %}
-          <div class='alert alert-success' role='alert'>
-            {{ task.description }}
-            <span id='{{ task.id  }}-progress'>{{ task.get_progress() }}</span>%
-          </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+  {% if current_user.is_authenticated %}
+    {% with tasks = current_user.get_tasks_in_progress() %}
+      {% if tasks %}
+        {% for task in tasks %}
+        <div class='alert alert-success' role='alert'>
+          {{ task.description }}
+          <span id='{{ task.id  }}-progress'>{{ task.get_progress() }}</span>%
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-info" role='alert'> {{ message }}</div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-    {% endif %}
-    {% block app_content %}
-    {% endblock %}
-  </div>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role='alert'> {{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+  {% block app_content %}
+  {% endblock %}
 {% endblock %}
 
 {% block scripts %}
