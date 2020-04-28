@@ -121,6 +121,18 @@ def messages():
     current_user.last_message_read_time = datetime.utcnow()
     current_user.add_notification('unread_message_count', 0)
     db.session.commit()
+
+    form = EditProfileForm(current_user.username)
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash(_('Your changes have been saved.'))
+        return redirect(url_for('main.user', username=username))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+
     page = request.args.get('page', 1, type=int)
     messages = current_user.messages_received.order_by(
         Message.timestamp.desc()).paginate(
@@ -130,7 +142,7 @@ def messages():
     prev_url = url_for('main.messages', page=messages.prev_num) \
         if messages.has_prev else None
     return render_template('messages.html', user=current_user, messages=messages.items,
-                           next_url=next_url, prev_url=prev_url)
+                           form=form, next_url=next_url, prev_url=prev_url)
 
 
 @bp.route('/follow/<username>')
