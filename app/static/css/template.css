@@ -1,7 +1,3 @@
-.content{
-    /*padding-left: 30px;*/
-}
-
 header{
     background: lightblue;
 }
@@ -26,8 +22,7 @@ header{
 .login {
     color: white;
 }
-.login-form {
-}
+
 .input-error {
     color: red;
 }
