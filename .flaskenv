@@ -1,1 +1,2 @@
 FLASK_APP=snowblunt_webb.py
+FLASK_ENV=development
