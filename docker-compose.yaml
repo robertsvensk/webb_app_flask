@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+    snowblunt_webb:
+        build: .
+        image: snowblunt_webb
+        depends_on:
+            - redis-server
+            - elasticsearch
+            - dbsnowblunt
+        ports:
+            - "8000:5000"
+        environment:
+            - SECRET_KEY=$SECRET_KEY
+
+            - MAIL_SERVER=$MAIL_SERVER
+            - MAIL_PORT=$MAIL_PORT
+            - MS_TRANSLATOR_KEY=$MS_TRANSLATOR_KEY
+
+            - ELASTICSERACH_URL=$ELASTICSERACH_URL
+            - ELASTICSEARCH_USER=$ELASTICSEARCH_USER
+            - ELASTICSEARCH_PWD=$ELASTICSEARCH_PWD
+
+            - DATABASE_URL=mysql+pymysql://$MYSQLDB_USER:$MYSQLDB_PWD@dbsnowblunt/snowblunt_webb
+
+            - REDIS_URL=redis://redis-server:6379/0
+
+    redis-worker:
+        image: snowblunt_webb
+        hostname: redis-worker
+        entrypoint: venv/bin/rq
+        command: worker -u redis://redis-server:6379/0 snowblunt_webb-tasks
+        depends_on:
+            - redis-server
+            - elasticsearch
+            - dbsnowblunt
+        environment:
+            - SECRET_KEY=$SECRET_KEY
+
+            - MAIL_SERVER=$MAIL_SERVER
+            - MAIL_PORT=$MAIL_PORT
+
+            - MS_TRANSLATOR_KEY=$MS_TRANSLATOR_KEY
+
+            - ELASTICSERACH_URL=$ELASTICSERACH_URL
+            - ELASTICSEARCH_USER=$ELASTICSEARCH_USER
+            - ELASTICSEARCH_PWD=$ELASTICSEARCH_PWD
+
+            - DATABASE_URL=mysql+pymysql://$MYSQLDB_USER:$MYSQLDB_PWD@dbsnowblunt/snowblunt_webb
+
+            - REDIS_URL=redis://redis-server:6379/0
+
+    redis-server:
+        image: redis:3-alpine
+        hostname: redis
+        ports:
+            - "6379:6379"
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
+        hostname: elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            - discovery.type=single-node
+
+    dbsnowblunt:
+        image: mysql/mysql-server:5.7
+        hostname: dbsnowblunt
+        environment:
+            - MYSQL_DATABASE=$MYSQLDB_NAME
+            - MYSQL_USER=$MYSQLDB_USER
+            - MYSQL_PASSWORD=$MYSQLDB_PWD
+
