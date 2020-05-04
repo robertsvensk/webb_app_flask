@@ -15,7 +15,11 @@
 
   <div class="col-md-4">
     <a class='btn btn-primary' href='{{ url_for('main.water_plants') }}' role='button'>Water the plants</a>
-    <p>Last time watered: {{ moment(log_entries[0].timestamp).calendar() }} <!-- add time from db --></p>
+    <p>Last time watered: 
+      {% if log_entries %}
+      {{ moment(log_entries[0].timestamp).calendar() }}
+      {% endif %}
+    </p>
 
     <h3>Watering Log</h3>
     {% for item in log_entries %}
