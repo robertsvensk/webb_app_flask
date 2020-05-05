@@ -249,7 +249,7 @@ def plants():
         if log_entries.has_prev else None
 
     #log_entries = range(entries_per_page)
-    return render_template("plants.html", user=current_user, log_entries=log_entries.items,
+    return render_template("plants.html", title='Plants', user=current_user, log_entries=log_entries.items,
                             next_url=next_url, prev_url=prev_url)
 
 @bp.route('/water_plants')
